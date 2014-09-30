@@ -1,7 +1,6 @@
 package com.foundation4u;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,14 +10,21 @@ import java.util.Properties;
 public class PropertiesFileReadWriteTest {
 
 	private Properties properties;
+	private String propertiesFileLocation;
 	
+	public PropertiesFileReadWriteTest(){
+		properties = new Properties();
+		//properties.load(this.getClass().getClassLoader().getResourceAsStream("test.properties"));
+		propertiesFileLocation = System.getProperty("user.dir")+"/config/test.properties";
+	}
 	public static void main(String[] args) {
 		try {
 			PropertiesFileReadWriteTest propertiesFileReadWriteTest = new PropertiesFileReadWriteTest();
 			propertiesFileReadWriteTest.process();
+			System.out.println("-----properties file operation completed------");
 		} catch (Exception e) {
 			System.out
-					.println("----------error occurred in properties file operation-------");
+					.println("----------error occurred in properties file operation-------"+e);
 		}
 
 	}
@@ -36,11 +42,9 @@ public class PropertiesFileReadWriteTest {
 		readPropertiesFile();
 	}
 
-	// make sure that properties file is in the project root folder
 	private void loadPropertiesFile() throws IOException {
-		properties = new Properties();
-		//properties.load(this.getClass().getClassLoader().getResourceAsStream("test.properties"));
-		InputStream inputStream = new FileInputStream("test.properties");
+		
+		InputStream inputStream = new FileInputStream(propertiesFileLocation);
 		properties.load(inputStream);
 		
 	}
@@ -55,8 +59,8 @@ public class PropertiesFileReadWriteTest {
 			String[] thirdRowValues = thirdRowValue.split(",");
 			properties.setProperty("thirdrow",thirdRowValues[0]+",thirdrowvalue6");
 			
-			OutputStream outputStream = new FileOutputStream("test.properties");
-			properties.store(outputStream, "updated the value in properties file");
+			OutputStream outputStream = new FileOutputStream(propertiesFileLocation);
+			properties.store(outputStream, null);
 			System.out.println("updated the value in properties file");
 		}catch(IOException e){
 			System.out.println("error occurrred while updating the properties file"+e);
@@ -67,8 +71,8 @@ public class PropertiesFileReadWriteTest {
 	private void writePropertiesFile() throws IOException {
 		properties.setProperty("thirdrow", "value5,value6");
 		properties.setProperty("fourthrow", "value7,value8");
-		OutputStream outputStream = new FileOutputStream("test.properties");
-		properties.store(outputStream, "added new rows in properties file");
+		OutputStream outputStream = new FileOutputStream(propertiesFileLocation);
+		properties.store(outputStream, null);
 		System.out.println("new rows added in properties file");
 	}
 
